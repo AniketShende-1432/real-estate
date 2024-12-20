@@ -1,0 +1,46 @@
+.cont{
+    border: none !important;
+    height:60px;
+}
+.logo{
+    color:white;
+    font-weight:bold;
+    font-size: 1.5rem;
+}
+.login-box{
+    height:18rem;
+    width:13rem;
+    background-color: white;
+    z-index: 9999;
+    border: 1px solid gray;
+    border-radius: 6px;
+    position:absolute;
+    left:83%;
+    top:44px;
+}
+.q-link{
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+.log-links{
+    cursor: pointer;
+}
+.log-box{
+    border-top:1px solid gray;
+}
+.log-btn{
+    border-radius: 25px;
+    background-color:darkorange;
+}
+.log-btn:hover{
+    background-color: darkorange;
+}
+.sign-txt{
+    font-size: 14px;
+}
+.signcol{
+    color: darkorange;
+}
+.signcol:hover{
+    color:darkorange;
+}

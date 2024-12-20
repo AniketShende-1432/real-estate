@@ -1,0 +1,71 @@
+.log-cont{
+    height:100vh;
+}
+.log-cont-box{
+    width: 40%;
+    border-radius: 8px;
+    border:1px solid gray;
+}
+.login-text{
+    color:darkorange;
+}
+.login-text:hover{
+    color:darkorange;
+}
+.log-cont-btn{
+    font-size: 14px;
+    border-radius: 20px;
+    border:1px solid gray;
+}
+.log-cont-input{
+    width:100%;
+    border:1px solid white;
+    border-bottom-color: gray;
+}
+.log-cont-input:focus{
+    border:1px solid white;
+    border-bottom-color: gray;
+    outline:none;
+}
+.authbox{
+    height:3rem;
+    width:4rem;
+    border:1px solid blue;
+}
+.phone-cont{
+    gap:0.5rem;
+    border-bottom:1px solid gray;
+    > .phone-input{
+        width:100%;
+        font-size: 16px;
+        border:none;
+    }
+    > .phone-input:focus{
+        border:none;
+        outline:none;
+    }
+}
+.sign-txt{
+    font-size: 14px;
+}
+.google-cont{
+    justify-content: space-between !important;
+    > div{
+        width:40%;
+        margin:0;
+        padding:0;
+        border-radius: 2px;
+    }
+}
+
+.otp-btn{
+    width:10rem;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    height:2.6rem;
+}
+.mail-icon{
+    height:2.6rem;
+    border-right:none !important;
+    color :rgb(11, 209, 11)
+}
