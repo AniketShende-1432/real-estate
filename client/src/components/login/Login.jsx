@@ -19,11 +19,10 @@ const Login = () => {
         }));
     };
     const handleChange = () => {
-        if(userType=="email")
-        {
+        if (userType == "email") {
             setUserType("phone");
         }
-        else{
+        else {
             setUserType("email");
         }
     };
@@ -45,7 +44,7 @@ const Login = () => {
                         <div className='d-flex'>
                             <div className='fs-3 border border-dark px-2 mail-icon d-flex align-items-center'> {userType !== 'phone' ? <FaSquarePhone /> : <IoMailOutline className='text-dark' />}</div>
                             <button type="button" className="otp-btn btn c-btn" onClick={() => handleChange()}>
-                                    {userType !== 'phone' ? 'Mobile OTP' : 'Email Login'}
+                                {userType !== 'phone' ? 'Mobile OTP' : 'Email Login'}
                             </button>
                         </div>
                     </div>
@@ -58,9 +57,9 @@ const Login = () => {
                         <div className='fw-bold'>Are you</div>
                         <div>
                             <button className='btn btn-light log-cont-btn mt-2' onClick={() => handleClick("button1")}
-                                style={clickedButtons.button1 ? { border: "1px solid darkorange", backgroundColor:"#FFE5B4" } : {}} >Buyer/Owner</button>
+                                style={clickedButtons.button1 ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >Buyer/Owner</button>
                             <button className='btn btn-light log-cont-btn mt-2 ms-2' onClick={() => handleClick("button2")}
-                                style={clickedButtons.button2 ? { border: "1px solid darkorange", backgroundColor:"#FFE5B4" } : {}}>Agent/Builder</button>
+                                style={clickedButtons.button2 ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>Agent/Builder</button>
                         </div>
                     </div>
                     <div>

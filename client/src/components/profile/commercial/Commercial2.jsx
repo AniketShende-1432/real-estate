@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import Profilenav from '../../profilenav/Profilenav';
 import Selldrop from '../sell/Selldrop';
 import { GiElevator } from "react-icons/gi";
-import water from "../../../assets/water.png";
-import electric from "../../../assets/electric.png";
+import water from "../../../assets/storage.png";
+import rain from "../../../assets/rain.png";
 import vastu from "../../../assets/vastu.png";
+import waste from "../../../assets/waste.png";
 import { BiCctv } from "react-icons/bi";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaBuilding } from "react-icons/fa";
@@ -112,13 +113,15 @@ const Commercial2 = () => {
                             <div className='text-secondary'>Amenities</div>
                             <div className='d-flex flex-wrap justify-content-start flat-ament mt-2'>
                                 <button className='btn btn-light btn-flatimg border' onClick={() => handleamenitycomm("electric")}
-                                    style={clickedamenitycomm.electric ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={electric} alt="img" className='flat-img' />Electricity Supply</button>
-                                <button className='btn btn-light border' onClick={() => handleamenitycomm("water")}
-                                    style={clickedamenitycomm.water ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={water} alt="img" className='flat-img' />Water Supply</button>
-                                <button className='btn btn-light border' onClick={() => handleamenitycomm("vastu")}
-                                    style={clickedamenitycomm.vastu ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={vastu} alt="img" className='flat-img' />Vastu Compliant</button>
+                                    style={clickedamenitycomm.electric ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={rain} alt="img" className='flat-img' />Rain Water Harvesting</button>
+                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handleamenitycomm("water")}
+                                    style={clickedamenitycomm.water ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={water} alt="img" className='flat-img' />Water Storage</button>
                                 <button className='btn btn-light border' onClick={() => handleamenitycomm("lift")}
                                     style={clickedamenitycomm.lift ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><GiElevator className='mb-1 fs-5 me-2' />Lift</button>
+                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handleamenitycomm("vastu")}
+                                    style={clickedamenitycomm.vastu ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={waste} alt="img" className='flat-img' />Waste Disposal</button>
+                                <button className='btn btn-light border' onClick={() => handleamenitycomm("vastu")}
+                                    style={clickedamenitycomm.vastu ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={vastu} alt="img" className='flat-img' />Vaastu Compliant</button>
                             </div>
                         </div>
                         <div className='mt-3'>
