@@ -2,6 +2,11 @@
     border: none !important;
     height:60px;
 }
+.adv-nav{
+    position:absolute;
+    z-index:9999;
+    top:0;
+}
 .logo{
     color:white;
     font-weight:bold;

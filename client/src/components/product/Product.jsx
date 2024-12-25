@@ -177,79 +177,79 @@ const Product = () => {
           <div className='mt-4' id='recommid'>
             <h5>Similar Properties</h5>
             <div id="carouselExample" class="carousel carousel-dark slide">
-            <div class="carousel-inner p-3">
-              <div class="carousel-item active">
-                <div className='card-wrapper d-flex'>
-                  <div className="card recomm-card" style={{ width: "18rem" }}>
-                    <img src={build1} className="card-img-top h-50" alt="img" />
-                    <div className="card-body">
-                      <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
-                      <div className='fw-bold'>Om Palace</div>
-                      <div>Vile Parle East, Mumbai</div>
-                      <a href="#" className="btn view-btn mt-2">Enquire Now</a>
+              <div class="carousel-inner p-3">
+                <div class="carousel-item active">
+                  <div className='card-wrapper d-flex'>
+                    <div className="card recomm-card" style={{ width: "18rem" }}>
+                      <img src={build1} className="card-img-top h-50" alt="img" />
+                      <div className="card-body">
+                        <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
+                        <div className='fw-bold'>Om Palace</div>
+                        <div>Vile Parle East, Mumbai</div>
+                        <a href="#" className="btn view-btn mt-2">Enquire Now</a>
+                      </div>
+                    </div>
+                    <div className="card recomm-card" style={{ width: "18rem" }}>
+                      <img src={build2} className="card-img-top h-50" alt="img" />
+                      <div className="card-body">
+                        <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
+                        <div className='fw-bold'>Om Palace</div>
+                        <div>Vile Parle East, Mumbai</div>
+                        <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
+                      </div>
+                    </div>
+                    <div className="card recomm-card me-0" style={{ width: "18rem" }}>
+                      <img src={build1} className="card-img-top h-50" alt="img" />
+                      <div className="card-body">
+                        <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
+                        <div className='fw-bold'>Om Palace</div>
+                        <div>Vile Parle East, Mumbai</div>
+                        <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
+                      </div>
                     </div>
                   </div>
-                  <div className="card recomm-card" style={{ width: "18rem" }}>
-                    <img src={build2} className="card-img-top h-50" alt="img" />
-                    <div className="card-body">
-                      <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
-                      <div className='fw-bold'>Om Palace</div>
-                      <div>Vile Parle East, Mumbai</div>
-                      <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
+                </div>
+                <div class="carousel-item">
+                  <div className='card-wrapper d-flex'>
+                    <div className="card recomm-card" style={{ width: "18rem" }}>
+                      <img src={build1} className="card-img-top h-50" alt="img" />
+                      <div className="card-body">
+                        <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
+                        <div className='fw-bold'>Om Palace</div>
+                        <div>Vile Parle East, Mumbai</div>
+                        <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
+                      </div>
                     </div>
-                  </div>
-                  <div className="card recomm-card me-0" style={{ width: "18rem" }}>
-                    <img src={build1} className="card-img-top h-50" alt="img" />
-                    <div className="card-body">
-                      <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
-                      <div className='fw-bold'>Om Palace</div>
-                      <div>Vile Parle East, Mumbai</div>
-                      <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
+                    <div className="card recomm-card" style={{ width: "18rem" }}>
+                      <img src={build2} className="card-img-top h-50" alt="img" />
+                      <div className="card-body">
+                        <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
+                        <div className='fw-bold'>Om Palace</div>
+                        <div>Vile Parle East, Mumbai</div>
+                        <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
+                      </div>
+                    </div>
+                    <div className="card recomm-card me-0" style={{ width: "18rem" }}>
+                      <img src={build1} className="card-img-top h-50" alt="img" />
+                      <div className="card-body">
+                        <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
+                        <div className='fw-bold'>Om Palace</div>
+                        <div>Vile Parle East, Mumbai</div>
+                        <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="carousel-item">
-              <div className='card-wrapper d-flex'>
-                  <div className="card recomm-card" style={{ width: "18rem" }}>
-                    <img src={build1} className="card-img-top h-50" alt="img" />
-                    <div className="card-body">
-                      <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
-                      <div className='fw-bold'>Om Palace</div>
-                      <div>Vile Parle East, Mumbai</div>
-                      <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
-                    </div>
-                  </div>
-                  <div className="card recomm-card" style={{ width: "18rem" }}>
-                    <img src={build2} className="card-img-top h-50" alt="img" />
-                    <div className="card-body">
-                      <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
-                      <div className='fw-bold'>Om Palace</div>
-                      <div>Vile Parle East, Mumbai</div>
-                      <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
-                    </div>
-                  </div>
-                  <div className="card recomm-card me-0" style={{ width: "18rem" }}>
-                    <img src={build1} className="card-img-top h-50" alt="img" />
-                    <div className="card-body">
-                      <h5 className="card-title">₹ 2.5 Cr, 2BHK</h5>
-                      <div className='fw-bold'>Om Palace</div>
-                      <div>Vile Parle East, Mumbai</div>
-                      <a href="#" className="btn  view-btn mt-2">Enquire Now</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-          </div>
           </div>
         </div>
         <div className='pt-2'>
@@ -257,6 +257,35 @@ const Product = () => {
             <label className='fw-bold fs-5'>Contact Agent</label>
             <label className='pro-no mt-2'>+91-98XXXXXXXX</label>
             <button className='btn c-btn mt-2'>Get Phone No.</button>
+          </div>
+          <div className='mt-4 d-flex flex-column align-items-center'>
+            <div><h5>Home Loans Offers</h5></div>
+            <div>
+              <div className="card p-2 m-2 d-flex flex-column align-items-center">
+                <img src="https://mbprodimages.s3.ap-south-1.amazonaws.com/images/homeloanData/bankLogo/177_Logo.png" className="card-img-top w-50 h-50" alt="img" />
+                <div className="card-body p-2">
+                  <p className="card-text fw-bold">LIC Housing Finance</p>
+                </div>
+              </div>
+              <div className="card p-2 m-2 d-flex flex-column align-items-center">
+                <img src="https://mbprodimages.s3.ap-south-1.amazonaws.com/images/homeloanData/bankLogo/91_Logo.png" className="card-img-top w-50 h-50" alt="img" />
+                <div className="card-body p-2">
+                  <p className="card-text fw-bold">Bank of India</p>
+                </div>
+              </div>
+              <div className="card p-2 m-2 d-flex flex-column align-items-center">
+                <img src="https://mbprodimages.s3.ap-south-1.amazonaws.com/images/homeloanData/bankLogo/249_Logo.png" className="card-img-top w-50 h-50" alt="img" />
+                <div className="card-body p-2">
+                  <p className="card-text fw-bold">Yes Bank</p>
+                </div>
+              </div>
+              <div className="card p-2 m-2 d-flex flex-column align-items-center">
+                <img src="https://mbprodimages.s3.ap-south-1.amazonaws.com/images/homeloanData/bankLogo/205_Logo.png" className="card-img-top w-50 h-50" alt="img" />
+                <div className="card-body p-2">
+                  <p className="card-text fw-bold">Reliance</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -29,6 +29,13 @@ router.post("/signin", async (req, res) => {
         if (!user) {
             return res.status(200).json({ message: "Please sign up first" });
         }
+        if (req.body.usertype === "Agent/Builder") {
+            if (user.usertype !== "Agent" && user.usertype !== "Builder") {
+                return res.status(200).json({ message: "Incorrect UserType" });
+            }
+        } else if (req.body.usertype !== user.usertype) {
+            return res.status(200).json({ message: "Incorrect UserType" });
+        }
 
         const isPasswordCorrect = bcrypt.compareSync(req.body.password, user.password);
         if (!isPasswordCorrect) {

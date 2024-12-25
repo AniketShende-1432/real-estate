@@ -22,6 +22,18 @@
     border:1px solid white;
     border-bottom-color: gray;
 }
+.log-cont-input-pass{
+    width:100%;
+    border:1px solid white;
+}
+.log-cont-input-pass:focus{
+    border:1px solid white;
+    outline:none;
+}
+.log-pass-cont{
+    border:1px solid white;
+    border-bottom-color: gray;
+}
 .log-cont-input:focus{
     border:1px solid white;
     border-bottom-color: gray;
