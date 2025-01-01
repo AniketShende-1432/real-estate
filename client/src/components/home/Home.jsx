@@ -35,7 +35,7 @@ const Home = () => {
         <>
             <Navbar back="profile-bg" />
             <div className='d-flex'>
-                <div style={{width:"78%"}}>
+                <div style={{width:"80%"}}>
                     <div id="carouselExampleAutoplaying" className="carousel slide h-adv-cont" data-bs-ride="carousel">
                         <div className="carousel-inner">
                             <div className="carousel-item active">
@@ -116,14 +116,14 @@ const Home = () => {
                             clickable: true, // Pagination dots will be clickable
                         }}
                         autoplay={{
-                            delay: 2000, // Time in milliseconds before the next slide
+                            delay: 4000, // Time in milliseconds before the next slide
                             disableOnInteraction: false, // Autoplay will continue even after user interaction
                           }}
                           modules={[Pagination, Autoplay]}  // Include the Pagination module
                         className="mySwiper"
                         style={{
-                            height: '400px', // Set the height of the carousel container
-                            width: '300px',  // Set the width of the carousel container
+                            height: '402px', // Set the height of the carousel container
+                            width: '255px',  // Set the width of the carousel container
                         }}
                     >
                         {/* Slides */}

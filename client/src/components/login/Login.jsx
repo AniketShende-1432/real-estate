@@ -1,16 +1,21 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import "./Login.css";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { IoMailOutline } from "react-icons/io5";
 import { FaSquarePhone } from "react-icons/fa6";
 import { BiShow } from "react-icons/bi";
 import axios from "axios";
+import { useDispatch } from 'react-redux';
+import { authActions } from '../../store';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
 
+    const dispatch = useDispatch();
+
+    const navigate = useNavigate();
     const [clickedButtons, setClickedButtons] = useState({
         button1: false,
         button2: false,
@@ -57,10 +62,12 @@ const Login = () => {
         try {
             const base_url = import.meta.env.VITE_BASE_URL;
             await axios.post(`${base_url}/api/v1/signin`, loginData).then((response)=>{
+                sessionStorage.setItem("id",response.data._id);
+                dispatch(authActions.login());
+                sessionStorage.setItem("showLoginToast", "true");
                 if (response.data.message) {
                     toast.error(response.data.message);
                 } else {
-                    toast.success('Login successful!');
                     setLoginData({
                         email: '',
                         password: '',
@@ -70,6 +77,7 @@ const Login = () => {
                         button1: false,
                         button2: false,
                     });
+                    navigate('/');
                 }
             });
         } catch (error) {

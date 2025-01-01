@@ -9,15 +9,14 @@
     width:100%;
 }
 .h-adv-image{
-    height:67.4vh;
-    border-bottom-left-radius: 4rem;
+    height:67.7vh;
     object-fit: cover;
 }
 .carousel-control-prev, .carousel-control-next{
     margin-top: 10rem !important;
 }
 .advbox{
-    height:25.3rem;
+    height:25.4rem;
     overflow: auto;
     cursor: pointer;
     scrollbar-width: none;
@@ -25,6 +24,7 @@
 .advbox-img{
     filter: brightness(50%);   
     border-radius:0px;
+    height: 12.5rem;
 }
 .advbox-txt{
     color:white;
@@ -52,7 +52,7 @@
     z-index:1000;
     position:absolute;
     top:70vh;
-    right:10rem;
+    right:8.4rem;
 }
 .s-cont-box{
     width:60%;

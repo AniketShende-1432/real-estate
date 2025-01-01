@@ -24,9 +24,10 @@
     border:1px solid;
 }
 .item-cont{
-    display: flex;
-    justify-content: space-around !important; 
+    display: flex; 
+    justify-content: space-around !important;
     width:100%;
+    height: auto;
     background-color:floralwhite;
 }
 .heart{
@@ -37,6 +38,8 @@
     border: 1px solid gray;
     border-radius: 5px;
     width:23%;
+    position:sticky;
+    top:0;
 }
 .filter-h3{
     color:darkorange;
@@ -68,14 +71,15 @@
     border:1px solid gray;
     text-align: left;
 }
-.items{
-    height:80vh;
-    width:65%;
+.items-sec{
+    height:auto;
+    width:67%;
     cursor:pointer;
+    display: flex;
+    flex-direction: column;
+    gap:1rem;
 }
 .s-img{
-    height:16.7rem;
-    width:18rem;
     border-top-left-radius: 14px;
     border-bottom-left-radius: 14px;
 }
@@ -95,6 +99,12 @@
 .item-btn{
     border: 1px solid blue;
     color:blue;
+}
+.item-box2{
+    width:100%;
+}
+.prop-price{
+    white-space: nowrap;
 }
 .view-btn{
     bottom: white;
@@ -116,7 +126,7 @@
 .checked{
     color:orange;
 }
-.card1{
+.cardsec{
     border: 1px solid gray;
     border-radius: 14px;
 }

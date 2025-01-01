@@ -25,6 +25,9 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         required: true,   // Must agree to terms and conditions
     },
+    sell: [
+        { type: mongoose.Types.ObjectId, ref: 'Sell' },
+    ],
 },{ timestamps: true });
 
 module.exports = mongoose.model("User",userSchema);

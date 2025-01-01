@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { IoIosArrowDown } from "react-icons/io";
+import axios from "axios";
 import "./Search.css"
 import build from "../../assets/building.jpg";
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+import Propcard from "./Propcard";
 
 const Search = () => {
     const [Input, setInput] = useState("Buy");
     const [Mvalue, setMvalue] = useState(0);
+    const [properties, setProperties] = useState([]);
     const [visibility, setVisibility] = useState({
         budget: true,
         type: false,
@@ -29,6 +32,21 @@ const Search = () => {
         bed4: false,
     });
     const [avalue, setavalue] = useState(0);
+
+    useEffect(() => {
+        const fetchProperties = async () => {
+            const base_url = import.meta.env.VITE_BASE_URL;
+            try {
+                await axios.get(`${base_url}/api/v3/properties`).then((response) => {
+                    setProperties(response.data); // Directly set the response data
+                })
+            } catch (error) {
+                console.error('Error fetching properties:', error);
+            }
+        };
+
+        fetchProperties();
+    }, []);
 
     const change = (value) => {
         setInput(value);
@@ -105,13 +123,13 @@ const Search = () => {
                         </div>
                         {visibility.type && (<div className='container type-box1 pb-2'>
                             <button className='btn btn-light type-btn mt-2' onClick={() => handleClick("button1")}
-                                style={clickedButtons.button1 ? { border: "1px solid darkorange", backgroundColor:"#FFE5B4" } : {}} >+1 RK/Studio Apartment</button>
+                                style={clickedButtons.button1 ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+1 RK/Studio Apartment</button>
                             <button className='btn btn-light type-btn mt-2' onClick={() => handleClick("button2")}
-                                style={clickedButtons.button2 ? { border: "1px solid darkorange", backgroundColor:"#FFE5B4" } : {}}>+ Residental Apartment</button>
+                                style={clickedButtons.button2 ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>+ Residental Apartment</button>
                             <button className='btn btn-light type-btn mt-2 me-1' onClick={() => handleClick("button3")}
-                                style={clickedButtons.button3 ? { border: "1px solid darkorange", backgroundColor:"#FFE5B4" } : {}}>+ House Villa</button>
+                                style={clickedButtons.button3 ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>+ House Villa</button>
                             <button className='btn btn-light type-btn mt-2' onClick={() => handleClick("button4")}
-                                style={clickedButtons.button4 ? { border: "1px solid darkorange", backgroundColor:"#FFE5B4" } : {}}>+ Land</button>
+                                style={clickedButtons.button4 ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>+ Land</button>
                         </div>
                         )}
                     </div>
@@ -123,13 +141,13 @@ const Search = () => {
                         </div>
                         {visibility.Nbed && (<div className='container type-box1 pb-2'>
                             <button className='btn btn-light type-btn mt-2 me-1' onClick={() => bedClick("bed1")}
-                                style={clickedBed.bed1 ? { border: "1px solid darkorange", backgroundColor:"#FFE5B4" } : {}} >+1 RK/BHK</button>
+                                style={clickedBed.bed1 ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >+1 RK/BHK</button>
                             <button className='btn btn-light type-btn mt-2' onClick={() => bedClick("bed2")}
-                                style={clickedBed.bed2 ? { border: "1px solid darkorange", backgroundColor:"#FFE5B4" } : {}}>+ 2BHK</button>
+                                style={clickedBed.bed2 ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>+ 2BHK</button>
                             <button className='btn btn-light type-btn mt-2 me-1' onClick={() => bedClick("bed3")}
-                                style={clickedBed.bed3 ? { border: "1px solid darkorange", backgroundColor:"#FFE5B4" } : {}}>+ 3BHK</button>
+                                style={clickedBed.bed3 ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>+ 3BHK</button>
                             <button className='btn btn-light type-btn mt-2' onClick={() => bedClick("bed4")}
-                                style={clickedBed.bed4 ? { border: "1px solid darkorange", backgroundColor:"#FFE5B4" } : {}}>+ 4BHK</button>
+                                style={clickedBed.bed4 ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>+ 4BHK</button>
                         </div>
                         )}
                     </div>
@@ -184,7 +202,7 @@ const Search = () => {
                         )}
                     </div>
                 </div>
-                <div className='items p-2'><Link className="nav-link active small" aria-current="page" to="/product">
+                <div className='items-sec p-2'><Link className="nav-link active small" aria-current="page" to="/product">
                     <div className='card1 d-flex bg-white'>
                         <div className='item-box1'>
                             <img src={build} alt="image" className='s-img' />
@@ -193,7 +211,7 @@ const Search = () => {
                             <div className='card-head d-flex flex-column'>
                                 <div className='d-flex'>
                                     <label className='head'>Chembur East, Mumbai</label>
-                                    <div className='fs-4 ms-auto'><FaHeart className='heart'/></div>
+                                    <div className='fs-4 ms-auto'><FaHeart className='heart' /></div>
                                 </div>
                                 <label className='head2'>3 BHK Flat in Chembur, Mumbai</label>
                             </div>
@@ -221,9 +239,12 @@ const Search = () => {
                                 <span class="fa fa-star checked"></span>
                                 <span class="fa fa-star checked"></span>
                                 <span class="fa fa-star"></span>
-                            </div>                          
+                            </div>
                         </div>
                     </div></Link>
+                    {properties.map((property) => (
+                        <Propcard key={property._id} property={property} /> // Render a card for each property
+                    ))}
                 </div>
             </div>
         </>

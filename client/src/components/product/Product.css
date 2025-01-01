@@ -17,12 +17,13 @@
 .product-nav{
     display: flex;
     gap:3rem;
-    > li a{
-        color:black !important;
-        border-bottom: 2px solid transparent;
+    > li button{
+        color:rgb(97, 96, 96) !important;
+        border: 2px solid transparent;
         transition: border 0.6ms;
+        background-color: white;
     }
-    > li a:hover{
+    > li button:hover{
         border-bottom: 2px solid darkorange;
     }
 }
@@ -104,6 +105,14 @@
     }
     border:1px solid gray;
     border-radius: 5px;
+}
+.pro-amenities{
+    border:1px solid gray;
+    border-radius: 5px;
+}
+.amen-img{
+    height:1.5rem;
+    width:1.5rem;
 }
 .recomm-item{
     gap:3rem;

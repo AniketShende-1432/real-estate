@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from './components/navbar/Navbar'
 import './App.css'
 import Home from './components/home/Home'
@@ -18,8 +18,20 @@ import PG from "./components/profile/pg/PG";
 import PG2 from './components/profile/pg/PG2';
 import Commercial from './components/profile/commercial/Commercial';
 import Commercial2 from './components/profile/commercial/Commercial2';
+import { useDispatch } from 'react-redux';
+import { authActions } from './store';
 
 function App() {
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const id=sessionStorage.getItem("id");
+    if(id){
+      dispatch(authActions.login());
+    }
+  }, [])
+  
+
   return (
     <>
       <Router>

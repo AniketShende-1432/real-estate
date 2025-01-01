@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
+import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './Product.css'
-import build from "../../assets/building.jpg";
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaHouse } from "react-icons/fa6";
 import { GiFamilyHouse } from "react-icons/gi";
@@ -9,8 +10,60 @@ import area from "../../assets/area.png";
 import earth from "../../assets/earth.png";
 import build1 from "../../assets/building1.jpg";
 import build2 from "../../assets/building2.webp";
+import Sofa from "../../assets/sofa.png";
+import Washing from "../../assets/wash.png";
+import lift from "../../assets/lift.png";
+import cctv from "../../assets/cctv.png";
+import bed from "../../assets/bed.png";
+import fridge from "../../assets/fridge.png";
+import aircond from "../../assets/air-conditioner.png";
+import gym from "../../assets/gym.png";
+import garden from "../../assets/garden.png";
+import kidsarea from "../../assets/kidsarea.png";
+import cupboard from "../../assets/cupboard.png";
+import tv from "../../assets/tv.png";
+import geyser from "../../assets/geyser.png";
+import swim from "../../assets/swim.png";
+import water from "../../assets/water.png";
+import backcard from "../../assets/backcard.png";
 
 const Product = () => {
+  const location = useLocation();
+  const { property } = location.state;
+  const base_url = import.meta.env.VITE_BASE_URL;
+  const amenimg = {
+    'Sofa': Sofa,
+    'Washing Machine': Washing,
+    'Lift': lift,
+    'CCTV': cctv,
+    'Bed': bed,
+    'Fridge': fridge,
+    'AC': aircond,
+    'Gym': gym,
+    'Garden': garden,
+    'Kides Area': kidsarea,
+    'Cupboard': cupboard,
+    'TV': tv,
+    'Geyser': geyser,
+    'Swimming Pool': swim,
+    'Regular Water Supply': water,
+  }
+
+  const formatPrice = (price) => {
+    if (price >= 10000000) {
+      return `${(price / 10000000).toFixed(1)} Cr`; // Crores with 2 decimal places
+    } else if (price >= 100000) {
+      return `${(price / 100000).toFixed(1)} Lac`; // Lacs with 2 decimal places
+    } else if (price >= 1000) {
+      return `${(price / 1000).toFixed(1)} K`; // Thousands with 2 decimal places
+    } else {
+      return price.toString(); // Less than 1000, no formatting needed
+    }
+  };
+  const handleOverviewClick = (value) => {
+    document.getElementById(value).scrollIntoView({ behavior: 'smooth' }); // Scroll smoothly to the section
+  };
+
   useEffect(() => {
     const navbar = document.getElementById('navbar');
     let lastScrollY = window.scrollY;
@@ -51,8 +104,8 @@ const Product = () => {
     <div style={{ backgroundColor: "aliceblue" }}>
       <div className='container-fluid pro-nav-cont' id='navbar'>
         <div className='d-flex p-3 pb-0'>
-          <div className='me-3 fs-5 fw-bold'>₹ 10.5 Cr</div>
-          <div className='ps-3 pt-1 pro-head'>3 BHK (3Baths) 1800 sqft (167sqm) For Sale Chembur East, Mumbai</div>
+          <div className='me-3 fs-5 fw-bold'>₹ {formatPrice(property.price)}</div>
+          <div className='ps-3 pt-1 pro-head'>{property.bhk} ({property.features.bathrooms || "-"} Baths) {property.carpetArea} {property.carpetAreaUnit}  &nbsp;&nbsp;&nbsp;For Sale {property.locality}, {property.city}</div>
         </div>
         <div>
           <nav class="navbar navbar-expand-lg bg-wite">
@@ -61,18 +114,18 @@ const Product = () => {
                 <span class="navbar-toggler-icon"></span>
               </button>
               <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav product-nav">
-                  <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#overid">Overview</a>
+                <ul className="navbar-nav product-nav">
+                  <li className="nav-item">
+                    <button onClick={() => handleOverviewClick("overid")}>Overview</button>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#detailid">More Details</a>
+                  <li className="nav-item">
+                    <button onClick={() => handleOverviewClick("detailid")}>More Details</button>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#societyid">Society</a>
+                  <li className="nav-item">
+                    <button onClick={() => handleOverviewClick("societyid")}>Society</button>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#recommid">Recommendation</a>
+                  <li className="nav-item">
+                    <button onClick={() => handleOverviewClick("recommid")}>Recommendation</button>
                   </li>
                 </ul>
               </div>
@@ -84,41 +137,41 @@ const Product = () => {
         <div>
           <div className='card1 d-flex mt-4 bg-white' id="overid">
             <div className='item-box1'>
-              <img src={build} alt="image" className='s-img' />
+              <img src={property.images && property.images[0] ? `${base_url}${property.images[0]}` : backcard} alt="image" className='s-img' />
             </div>
             <div className='item-box2 p-3'>
               <div className='card-head d-flex flex-column'>
                 <div className='d-flex'>
-                  <label className='head'>Chembur East, Mumbai</label>
+                  <label className='head'>{property.locality}, {property.city}</label>
                 </div>
-                <label className='head2'>3 BHK Flat in Chembur, Mumbai</label>
+                <label className='head2'>{property.bhk} Flat in {property.locality}, {property.city}</label>
               </div>
               <div className='mt-2 d-flex'>
                 <div className='d-flex flex-column m-3 ms-0'>
-                  <label className='fw-bold fs-5'>₹ 10.5 Cr</label>
-                  <label className='price'>₹ 77,777/sqft</label>
+                  <label className='fw-bold fs-5'>₹ {formatPrice(property.price)}</label>
+                  <label className='price'>₹ {Math.floor(property.price / property.carpetArea)}/{property.carpetAreaUnit}</label>
                 </div>
                 <div className='d-flex flex-column m-3 ms-0 ps-3 item-bd'>
-                  <label className='fw-bold fs-6'>1800 sqft (167sqm)</label>
+                  <label className='fw-bold fs-6'>{property.carpetArea} {property.carpetAreaUnit}</label>
                   <label>Super Build-up Area</label>
                 </div>
                 <div className='d-flex flex-column m-3 ms-0 ps-3 item-bd'>
-                  <label className='fw-bold fs-6'>3 BHK (3Baths)</label>
-                  <label>Ready To Move</label>
+                  <label className='fw-bold fs-6'>{property.bhk} ({property.features.bathrooms || '-'} Baths)</label>
+                  <label>{property.possessionStatus}</label>
                 </div>
                 <div className='d-flex flex-column m-3 ms-0 ps-3 item-bd'>
                   <label className='fw-bold fs-6'>Developer</label>
-                  <label>L & T Realty</label>
+                  <label>{property.developer || '-'}</label>
                 </div>
               </div>
               <div className='d-flex pro-status'>
                 <div className='d-flex flex-column'>
                   <label className='fw-bold fs-6'><img src={furni} alt="img" className='pro-img me-1 pb-1' />Furnished Status</label>
-                  <label>Unfurnished</label>
+                  <label>{property.furnishedType}</label>
                 </div>
                 <div className='d-flex flex-column'>
-                  <label className='fw-bold fs-6'>Age of Construction</label>
-                  <label>Ready To Move</label>
+                  <label className='fw-bold fs-6'>Age of Property</label>
+                  <label>{property.features.ageOfProperty ?? '-' } years</label>
                 </div>
               </div>
               <div className='mt-3'>
@@ -131,48 +184,72 @@ const Product = () => {
             <h4>More Details</h4>
             <div className='row mt-3'>
               <div className='col-4 fw-light fs-5'>Price Breakup</div>
-              <div className='col-8 fw-bold fs-5'>₹ 10.5 Cr</div>
+              <div className='col-8 fw-bold fs-5'>₹ {formatPrice(property.price)}</div>
             </div>
             <div className='row mt-3'>
               <div className='col-4 fw-light fs-5'>Address</div>
-              <div className='col-8 fw-bold fs-5'>Chembur East, Mumbai, Maharashtra</div>
+              <div className='col-8 fw-bold fs-5'>{property.locality}, {property.city}, Maharashtra</div>
             </div>
             <div className='row mt-3'>
               <div className='col-4 fw-light fs-5'>Furnishing</div>
-              <div className='col-8 fw-bold fs-5'>Unfurnished</div>
+              <div className='col-8 fw-bold fs-5'>{property.furnishedType}</div>
             </div>
             <div className='row mt-3'>
-              <div className='col-4 fw-light fs-5'>Age of Construction</div>
-              <div className='col-8 fw-bold fs-5'>Ready To Move</div>
+              <div className='col-4 fw-light fs-5'>Status</div>
+              <div className='col-8 fw-bold fs-5'>{property.possessionStatus}</div>
+            </div>
+            <div className='row mt-3'>
+              <div className='col-4 fw-light fs-5'>Age of Property</div>
+              <div className='col-8 fw-bold fs-5'>{property.features.ageOfProperty ?? '-'} years</div>
             </div>
             <button className='btn c-btn mt-3'>Contact Agent</button>
           </div>
           <div className='pro-society bg-white mt-3 p-3' id='societyid'>
             <h4>Society</h4>
-            <div className='soc-text'>Shamik Nirmaya CHS</div>
+            <div className='soc-text'>{property.society} CHS</div>
             <ul className='d-flex mt-2'>
               <li>
                 <div><img src={area} alt="img" className='pro-img me-1 pb-1' />Total Occupied Area</div>
-                <div className='fw-bold'>0.2 Acres</div>
+                <div className='fw-bold'>{property.societyArea || '-'} {property.societyAreaUnit}</div>
               </li>
               <li>
                 <div className='d-flex'>
                   <div className='me-1'><GiFamilyHouse /></div><div className='soc-icon-list'>Project Details</div>
                 </div>
-                <div className='fw-bold'>1 Tower, 28 Units</div>
-                <div className='fw-bold'>11 Floors</div>
+                <div className='fw-bold'>1 Building</div>
+                <div className='fw-bold'>{property.features.totalFloors || '-'} Floors</div>
               </li>
               <li>
                 <div><img src={earth} alt="img" className='pro-img me-1 pb-1' />Configuration</div>
-                <div className='fw-bold'>3 BHK</div>
+                <div className='fw-bold'>{property.bhk}</div>
+                <div className='fw-bold'>{property.features.bathrooms || '-'} Bathroom</div>
+                <div className='fw-bold'>{property.features.balconies} Balcony</div>
               </li>
               <li>
                 <div className='d-flex'>
                   <div className='me-1'><FaHouse /></div><div className='soc-icon-list'>Property types</div>
                 </div>
-                <div className='fw-bold'>Apartment</div>
+                <div className='fw-bold'>{property.propertyType}</div>
               </li>
             </ul>
+          </div>
+          <div className='pro-amenities bg-white mt-3 p-3'>
+            <h4>Amenities</h4>
+            {property.amenities && property.amenities.length > 0 ? (
+              <div>
+                {Array.from({ length: Math.ceil(property.amenities.length / 4) }, (_, i) => (
+                  <div className='row mt-3' key={i}>
+                    {property.amenities.slice(i * 4, i * 4 + 4).map((amenity, index) => (
+                      <div className='col-3' key={index}>
+                        <img src={amenimg[amenity]} alt="img" className='amen-img mb-1' /> {amenity}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <h5>-</h5>
+            )}
           </div>
           <div className='mt-4' id='recommid'>
             <h5>Similar Properties</h5>

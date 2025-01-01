@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import "./Sell.css";
 
 const Selldrop = ({label,options, value, onChange}) => {
@@ -6,6 +6,10 @@ const Selldrop = ({label,options, value, onChange}) => {
     const [filteredOptions, setFilteredOptions] = useState(options); // Filtered options
     const [inputValue, setInputValue] = useState(value); // Input field value
     const [dropdownVisible, setDropdownVisible] = useState(false);
+
+    useEffect(() => {
+        setInputValue(value); // Update inputValue when value changes
+    }, [value]);
 
     const handleInputChange = (e) => {
         const value = e.target.value;

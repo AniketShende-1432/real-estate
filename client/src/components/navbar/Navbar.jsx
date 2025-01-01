@@ -1,12 +1,36 @@
-import React,{useState} from 'react'
+import React, { useState ,useEffect } from 'react'
 import './Navbar.css'
 import { Link } from 'react-router-dom';
+import { useSelector,useDispatch } from 'react-redux';
+import { authActions } from '../../store';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Navbar = (props) => {
-    const [Visible,setVisible] =useState(false);
-    const hchange = ()=>{
+    const [Visible, setVisible] = useState(false);
+    const hchange = () => {
         setVisible(!Visible);
     }
+
+    const isLoggedin = useSelector((state) => state.auth.isLoggedIn);
+    const dispatch = useDispatch();
+    const logout =()=>{
+        sessionStorage.clear('id');
+        dispatch(authActions.logout());
+        toast.success("Log Out Successfully");
+    }
+
+    useEffect(() => {
+        // Check if login toast should be shown
+        if (sessionStorage.getItem("showLoginToast") === "true") {
+            toast.success("Login successful!", {
+                onClose: () => {
+                    sessionStorage.removeItem("showLoginToast");
+                },
+            });
+        }
+    }, []);
+
     return (
         <>
             <nav className={`navbar navbar-expand-lg ${props.back} ${props.cname} border cont`}>
@@ -38,12 +62,20 @@ const Navbar = (props) => {
                     <div className='fw-bold p-1 log-links'>Manage Properties</div>
                     <div className='fw-bold p-1 log-links'><Link className="nav-link active small" aria-current="page" to="/profile">My Profile</Link></div>
                 </div>
-                <div className='p-2 mt-3 log-box'>
-                    <button type="button" class="btn text-white w-100 log-btn mt-2"><Link className="nav-link active small" aria-current="page" to="/login">Login</Link></button>
-                    <div className='sign-txt d-flex justify-content-around ms-1 me-1 mt-3'>New to Housing ?<Link className="nav-link active small signcol fw-bold" aria-current="page" to="/signup"> Sign up</Link></div>
-                </div>
+                {!isLoggedin && (
+                    <div className='p-2 mt-3 log-box'>
+                        <button type="button" class="btn text-white w-100 log-btn mt-2"><Link className="nav-link active small" aria-current="page" to="/login">Login</Link></button>
+                        <div className='sign-txt d-flex justify-content-around ms-1 me-1 mt-3'>New to Housing ?<Link className="nav-link active small signcol fw-bold" aria-current="page" to="/signup"> Sign up</Link></div>
+                    </div>
+                )}
+                {isLoggedin && (
+                    <div className='p-2 mt-3 log-box'>
+                        <button type="button" class="btn text-white w-100 log-btn mt-2" onClick={logout}>Log Out</button>
+                    </div>
+                )}
             </div>
             )}
+            <ToastContainer />
         </>
     )
 }

@@ -62,3 +62,16 @@
     background-color: darkorange;
     color:white;
 }
+.eye-icon-pass{
+    cursor:pointer;
+    border:1px solid gray;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.pass-inp{
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+.perror-txt{
+    font-size: small;
+}

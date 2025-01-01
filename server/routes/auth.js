@@ -51,6 +51,70 @@ router.post("/signin", async (req, res) => {
     }
 });
 
+router.get("/profile/:id", async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        const { password, ...userData } = user._doc; // Exclude password from response
+        res.status(200).json(userData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+});
+
+router.put("/profile/:id", async (req, res) => {
+    try {
+        const { name, email, phone, usertype } = req.body; // Extract data from the request body
+        // Find the user by ID and update the document
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id, 
+            { name, email, phone, usertype }, 
+            { new: true } // This returns the updated document
+        );
+        
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json(updatedUser); // Return the updated user data
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+});
+
+router.put("/profile/:id/password", async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        // Find the user by ID
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Verify current password
+        const isMatch = bcrypt.compareSync(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Incorrect current password" });
+        }
+
+        // Hash the new password
+        const hashedPassword = bcrypt.hashSync(newPassword);
+
+        // Update the user's password
+        user.password = hashedPassword;
+        await user.save();
+
+        res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+});
 // {
 //     "email":"abc@gmail.com",
 //     "password":"admin123"
