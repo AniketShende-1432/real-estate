@@ -5,6 +5,7 @@ import { useSelector,useDispatch } from 'react-redux';
 import { authActions } from '../../store';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import logo from "../../assets/logo.jpg";
 
 const Navbar = (props) => {
     const [Visible, setVisible] = useState(false);
@@ -35,7 +36,7 @@ const Navbar = (props) => {
         <>
             <nav className={`navbar navbar-expand-lg ${props.back} ${props.cname} border cont`}>
                 <div className="container d-flex justify-content-around">
-                    <a className="navbar-brand logo" href="#">Housing</a>
+                    <a className="navbar-brand logo" href="#">ShelterBIG</a>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                             <li className="nav-item ms-1">

@@ -139,9 +139,6 @@ const Sell = () => {
         const furniValue = buttonKey === 'furni1' ? 'Fully furnished' :
             buttonKey === 'furni2' ? 'Semi Furnished' : "Unfurnished"
         setFormData({ ...formData, furnishedType: furniValue });
-
-
-        setFormData({ ...formData, bhk: bhkValue });
     }
     const handlepossChange = (event) => {
         const poss = event.target.value;

@@ -170,7 +170,6 @@ const Sell2 = () => {
                 }
             }
             selectImage.forEach((image) => frmData.append("images", image))
-            console.log(formdata);
             if (userId) {
                 await axios.post(`${base_url}/api/v2/sellproperty`, frmData)
                     .then((response) => {

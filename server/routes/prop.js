@@ -3,6 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const Sell = require("../models/sell");
 const User = require("../models/user");
+const Rent = require("../models/rent");
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -39,6 +40,25 @@ router.post("/sellproperty", upload.array('images', 5), async (req, res) => {
 
 });
 
+router.post("/rentproperty", upload.array('images', 5), async (req, res) => {
+    try {
+        const { id, ...rentData } = req.body;
+        const images = req.files.map(file => `/uploads/${file.filename}`);
+        const features = JSON.parse(JSON.stringify(req.body.features));
 
+        const existingUser = await User.findById(id);
+        if(existingUser){
+            const rent = new Rent({ ...rentData,images,features,user:id });
+            
+            await rent.save().then(()=>res.status(200).json({ message: 'Rent Property posted successfully'}));
+            
+            await User.findByIdAndUpdate(id, { $push: { rent: rent } });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error posting property' });
+    };
+
+});
 
 module.exports = router;

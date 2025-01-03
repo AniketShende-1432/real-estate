@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useLocation } from 'react-router-dom';
+import axios from "axios";
 import Profilenav from '../../profilenav/Profilenav';
 import Selldrop from '../sell/Selldrop';
 import { GiWashingMachine } from "react-icons/gi";
@@ -16,9 +18,15 @@ import tv from "../../../assets/tv.png";
 import geyser from "../../../assets/geyser.png";
 import swim from "../../../assets/swim.png";
 import water from "../../../assets/water.png";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "./Rent.css";
 
 const Rent2 = () => {
+
+    const location = useLocation();
+    const formData = location.state;
+    const [rentdata, setrentdata] = useState(formData);
 
     const [Beedroomrent, setBeedroomrent] = useState('');
     const [Balconiesrent, setBalconiesrent] = useState('');
@@ -52,11 +60,13 @@ const Rent2 = () => {
         water: false,
     });
     const [imagesrent, setImagesrent] = useState([]); // State to store image previews
-    
+    const [selectImage, setselectImage] = useState([]);
+
     const handleFileChangerent = (event) => {
         const files = Array.from(event.target.files); // Convert FileList to an array
         const previewImages = files.map((file) => URL.createObjectURL(file)); // Create object URLs for preview
         setImagesrent(previewImages); // Update state with image previews
+        setselectImage(files);
     };
 
     const bedroomoptionsrent = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -70,7 +80,7 @@ const Rent2 = () => {
         Floornooptionsrent.push(i);
         Totalflooroptionsrent.push(i);
     }
-    for (let i = 9; i >= 1; i--) {
+    for (let i = 9; i >= 0; i--) {
         Agepropoptionsrent.unshift(i);
     }
     for (let i = 2; i <= 36; i++) {
@@ -81,22 +91,111 @@ const Rent2 = () => {
             ...prevState,
             [buttonKey]: !prevState[buttonKey], // Toggle the clicked button's style
         }));
+        const person = buttonKey === 'family' ? 'Family' :
+            buttonKey === 'men' ? 'Single Men' : "Single Women"
+        setrentdata({ ...rentdata, willingToRent: person });
     }
     const changeduardrop = (value) => {
-        setDuration(value);
+        setrentdata({ ...rentdata, durationOfAgreement: value });
     }
-    const handleflatrent = (buttonKey) => {
-        setClickedflatrent((prevState) => ({
+    const handleflatrent = (amenity) => {
+        setrentdata((prevState) => {
+            const amenities = [...prevState.amenities];
+
+            // If the amenity is not in the array, add it
+            if (!amenities.includes(amenity)) {
+                amenities.push(amenity);
+            } else {
+                // If it's already in the array, remove it (toggle effect)
+                const index = amenities.indexOf(amenity);
+                amenities.splice(index, 1);
+            }
+
+            return { ...prevState, amenities };
+        });
+    };
+    const handlesocrent = (amenity) => {
+        setrentdata((prevState) => {
+            const amenities = [...prevState.amenities];
+
+            // If the amenity is not in the array, add it
+            if (!amenities.includes(amenity)) {
+                amenities.push(amenity);
+            } else {
+                // If it's already in the array, remove it (toggle effect)
+                const index = amenities.indexOf(amenity);
+                amenities.splice(index, 1);
+            }
+
+            return { ...prevState, amenities };
+        });
+    };
+    const handleFeaturesChange = (field, value) => {
+        setrentdata((prevState) => ({
             ...prevState,
-            [buttonKey]: !prevState[buttonKey], // Toggle the clicked button's style
+            features: {
+                ...prevState.features,
+                [field]: field === "ageOfProperty" ? value : value === '' ? '' : parseInt(value, 10), // Parse as number for all except ageOfProperty
+            },
         }));
     };
-    const handlesocrent = (buttonKey) => {
-        setClickedsocrent((prevState) => ({
-            ...prevState,
-            [buttonKey]: !prevState[buttonKey], // Toggle the clicked button's style
-        }));
-    };
+    const handleRsubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const userId = sessionStorage.getItem("id");
+            const base_url = import.meta.env.VITE_BASE_URL;
+            const rdata = { ...rentdata, id: userId, type: "Rent" };
+            const rntData = new FormData();
+            for (let [key, value] of Object.entries(rdata)) {
+                if (key === "availableFrom" && value instanceof Date) {
+                    value = value.toISOString().split("T")[0]; // Convert to 'yyyy-MM-dd' format
+                }
+                if (Array.isArray(value)) {
+                    // If the value is an array (like amenities or images), append each item
+                    value.forEach((item) => rntData.append(key, item));
+                } else if (typeof value === "object" && value !== null) {
+                    console.log(key);
+                    // If the value is an object (like features), append each property of the object
+                    for (const [subKey, subValue] of Object.entries(value)) {
+                        rntData.append(`${key}[${subKey}]`, subValue);
+                    }
+                } else {
+                    // For other simple data types, append directly
+                    rntData.append(key, value);
+                }
+            }
+            selectImage.forEach((image) => rntData.append("images", image));
+            if (userId) {
+                await axios.post(`${base_url}/api/v2/rentproperty`, rntData)
+                    .then((response) => {
+                        if (response.data.message === "Error posting property") {
+                            toast.error(response.data.message);
+                        } else {
+                            toast.success(response.data.message);
+                            setrentdata({
+                                propertyType: '', city: '', locality: '', society: '', bhk: '', furnishedType: '', carpetArea: '', areaUnit: '',
+                                monthlyRent: '', willingToRent: '', durationOfAgreement: '', securityDeposit: '', availableFrom: '',
+                                features: {
+                                    bedrooms: '', // Number of bedrooms
+                                    bathrooms: '', // Number of bathrooms
+                                    balconies: '', // Number of balconies
+                                    floorNumber: '', // Floor number
+                                    totalFloors: '', // Total floors in the building
+                                    ageOfProperty: '', // Age of the property in years
+                                },
+                                amenities: []
+                            });
+                        }
+                    });
+            }
+            else {
+                toast.error("Please Login First !!");
+            }
+        } catch (error) {
+            toast.error("Something went wrong. Please try again.");
+            console.log(error);
+        }
+    }
 
     return (
         <div className="parent-cont" style={{ backgroundColor: "#FFF5EE" }}>
@@ -111,16 +210,16 @@ const Rent2 = () => {
                                 <Selldrop
                                     label="Bedroom"
                                     options={bedroomoptionsrent}
-                                    value={Beedroomrent}
-                                    onChange={setBeedroomrent}
+                                    value={rentdata.features.bedrooms}
+                                    onChange={(value) => handleFeaturesChange("bedrooms", value)}
                                 />
                             </div>
                             <div>
                                 <Selldrop
                                     label="Balconies"
                                     options={balconiesoptionsrent}
-                                    value={Balconiesrent}
-                                    onChange={setBalconiesrent}
+                                    value={rentdata.features.balconies}  // Bind to formData.features.balconies
+                                    onChange={(value) => handleFeaturesChange('balconies', value)}
                                 />
                             </div>
                         </div>
@@ -129,16 +228,16 @@ const Rent2 = () => {
                                 <Selldrop
                                     label="Bathroom"
                                     options={Bathroomoptionsrent}
-                                    value={Bathroomrent}
-                                    onChange={setBathroomrent}
+                                    value={rentdata.features.bathrooms}  // Bind to formData.features.bathrooms
+                                    onChange={(value) => handleFeaturesChange('bathrooms', value)}
                                 />
                             </div>
                             <div>
                                 <Selldrop
                                     label="Age of Property"
                                     options={Agepropoptionsrent}
-                                    value={Ageproprent}
-                                    onChange={setAgeproprent}
+                                    value={rentdata.features.ageOfProperty}  // Bind to formData.features.ageOfProperty
+                                    onChange={(value) => handleFeaturesChange('ageOfProperty', value)}
                                 />
                             </div>
                         </div>
@@ -147,16 +246,16 @@ const Rent2 = () => {
                                 <Selldrop
                                     label="Total Floor"
                                     options={Totalflooroptionsrent}
-                                    value={Totalfloorrent}
-                                    onChange={setTotalfloorrent}
+                                    value={rentdata.features.totalFloors}  // Bind to formData.features.totalFloors
+                                    onChange={(value) => handleFeaturesChange('totalFloors', value)}
                                 />
                             </div>
                             <div>
                                 <Selldrop
                                     label="Floor no"
                                     options={Floornooptionsrent}
-                                    value={Floornorent}
-                                    onChange={setFloornorent}
+                                    value={rentdata.features.floorNumber}  // Bind to formData.features.floorNumber
+                                    onChange={(value) => handleFeaturesChange('floorNumber', value)}
                                 />
                             </div>
                         </div>
@@ -176,7 +275,7 @@ const Rent2 = () => {
                         <div><h5>Duration of Agreement</h5></div>
                         <div class="dropdown d-flex rent-drop">
                             <button class="btn btn-secondary dropdown-toggle bg-white text-dark d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span>{Duration}</span>
+                                <span>{rentdata.durationOfAgreement || 'Select'}</span>
                                 <span className="dropdown-arrow"></span>
                             </button>
                             <ul class="dropdown-menu rent-drop-menu">
@@ -193,41 +292,41 @@ const Rent2 = () => {
                         <div>
                             <div className='text-secondary'>Flat Furnishing</div>
                             <div className='d-flex flex-wrap justify-content-evenly flat-ament mt-2'>
-                                <button className='btn btn-light border' onClick={() => handleflatrent("wash")}
-                                    style={clickedflatrent.wash ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><GiWashingMachine className='mb-1 fs-5 me-2' />Washing Machine</button>
-                                <button className='btn btn-light border' onClick={() => handleflatrent("sofa")}
-                                    style={clickedflatrent.sofa ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><GiSofa className='mb-1 fs-5 me-2' />Sofa</button>
-                                <button className='btn btn-light border' onClick={() => handleflatrent("bed")}
-                                    style={clickedflatrent.bed ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><FaBed className='mb-1 fs-5 me-2' />Bed</button>
-                                <button className='btn btn-light btn-flatimg border' onClick={() => handleflatrent("fridge")}
-                                    style={clickedflatrent.fridge ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={fridge} alt="img" className='h-100 mb-1' />Fridge</button>
-                                <button className='btn btn-light border' onClick={() => handleflatrent("ac")}
-                                    style={clickedflatrent.ac ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={aircond} alt="img" className='flat-img' />AC</button>
-                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handleflatrent("cupboard")}
-                                    style={clickedflatrent.cupboard ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={cupboard} alt="img" className='flat-img' />Cupboard</button>
-                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handleflatrent("geyser")}
-                                    style={clickedflatrent.geyser ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={geyser} alt="img" className='flat-img' />Geyser</button>
-                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handleflatrent("tv")}
-                                    style={clickedflatrent.tv ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={tv} alt="img" className='flat-img' />TV</button>
+                                <button className='btn btn-light border' onClick={() => handleflatrent("Washing Machine")}
+                                    style={rentdata.amenities.includes('Washing Machine') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><GiWashingMachine className='mb-1 fs-5 me-2' />Washing Machine</button>
+                                <button className='btn btn-light border' onClick={() => handleflatrent("Sofa")}
+                                    style={rentdata.amenities.includes('Sofa') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><GiSofa className='mb-1 fs-5 me-2' />Sofa</button>
+                                <button className='btn btn-light border' onClick={() => handleflatrent("Bed")}
+                                    style={rentdata.amenities.includes('Bed') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><FaBed className='mb-1 fs-5 me-2' />Bed</button>
+                                <button className='btn btn-light btn-flatimg border' onClick={() => handleflatrent("Fridge")}
+                                    style={rentdata.amenities.includes('Fridge') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={fridge} alt="img" className='h-100 mb-1' />Fridge</button>
+                                <button className='btn btn-light border' onClick={() => handleflatrent("AC")}
+                                    style={rentdata.amenities.includes('AC') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={aircond} alt="img" className='flat-img' />AC</button>
+                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handleflatrent("Cupboard")}
+                                    style={rentdata.amenities.includes('Cupboard') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={cupboard} alt="img" className='flat-img' />Cupboard</button>
+                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handleflatrent("Geyser")}
+                                    style={rentdata.amenities.includes('Geyser') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={geyser} alt="img" className='flat-img' />Geyser</button>
+                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handleflatrent("TV")}
+                                    style={rentdata.amenities.includes('TV') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={tv} alt="img" className='flat-img' />TV</button>
                             </div>
                         </div>
                         <div className='mt-3'>
                             <div className='text-secondary'>Society Amenities</div>
                             <div className='d-flex flex-wrap flat-ament justify-content-evenly mt-2'>
-                                <button className='btn btn-light border' onClick={() => handlesocrent("lift")}
-                                    style={clickedsocrent.lift ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><GiElevator className='mb-1 fs-5 me-2' />Lift</button>
-                                <button className='btn btn-light border' onClick={() => handlesocrent("cctv")}
-                                    style={clickedsocrent.cctv ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><BiCctv className='mb-1 fs-5 me-2' />CCTV</button>
-                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlesocrent("karea")}
-                                    style={clickedsocrent.karea ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={kidsarea} alt="img" className='flat-img' /><label>Kides Area</label></button>
-                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlesocrent("garden")}
-                                    style={clickedsocrent.garden ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={garden} alt="img" className='flat-img' /><label>Garden</label></button>
-                                <button className='btn btn-light border' onClick={() => handlesoc("gym")}
-                                    style={clickedsocrent.gym ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={gym} alt="img" className='flat-img' /><label>Gym</label></button>
-                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlesocrent("swim")}
-                                    style={clickedsocrent.swim ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={swim} alt="img" className='flat-img' /><label>Swimming Pool</label></button>
-                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlesocrent("water")}
-                                    style={clickedsocrent.water ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={water} alt="img" className='flat-img' /><label>Regular Water Supply</label></button>
+                                <button className='btn btn-light border' onClick={() => handlesocrent("Lift")}
+                                    style={rentdata.amenities.includes('Lift') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><GiElevator className='mb-1 fs-5 me-2' />Lift</button>
+                                <button className='btn btn-light border' onClick={() => handlesocrent("CCTV")}
+                                    style={rentdata.amenities.includes('CCTV') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><BiCctv className='mb-1 fs-5 me-2' />CCTV</button>
+                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlesocrent("Kides Area")}
+                                    style={rentdata.amenities.includes('Kides Area') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={kidsarea} alt="img" className='flat-img' /><label>Kides Area</label></button>
+                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlesocrent("Garden")}
+                                    style={rentdata.amenities.includes('Garden') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={garden} alt="img" className='flat-img' /><label>Garden</label></button>
+                                <button className='btn btn-light border' onClick={() => handlesoc("Gym")}
+                                    style={rentdata.amenities.includes('Gym') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={gym} alt="img" className='flat-img' /><label>Gym</label></button>
+                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlesocrent("Swimming Pool")}
+                                    style={rentdata.amenities.includes('Swimming Pool') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={swim} alt="img" className='flat-img' /><label>Swimming Pool</label></button>
+                                <button className='btn btn-light border d-flex justify-content-center align-items-center' onClick={() => handlesocrent("Regular Water Supply")}
+                                    style={rentdata.amenities.includes('Regular Water Supply') ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} ><img src={water} alt="img" className='flat-img' /><label>Regular Water Supply</label></button>
                             </div>
                         </div>
                     </div>
@@ -236,8 +335,8 @@ const Rent2 = () => {
                         <div>
                             <div>
                                 <label for="formFileMultiplerent" class="form-label photo-btn text-white fw-bold text-center mt-2 p-2 w-100" htmlFor='formFileMultiplerent'>Add Photos Now</label>
-                                <input className="form-control" type="file" id="formFileMultiplerent" multiple style={{ display: 'none' }} 
-                                onChange={handleFileChangerent} />
+                                <input className="form-control" type="file" id="formFileMultiplerent" multiple style={{ display: 'none' }}
+                                    onChange={handleFileChangerent} />
                             </div>
                             <div className="image-preview-container d-flex flex-wrap">
                                 {imagesrent.map((src, index) => (
@@ -253,9 +352,10 @@ const Rent2 = () => {
                             </div>
                         </div>
                     </div>
-                    <button className='sell-btn p-2 w-100 text-white fw-bold mt-3'>Submit Property</button>
+                    <button className='sell-btn p-2 w-100 text-white fw-bold mt-3' onClick={handleRsubmit}>Submit Property</button>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     )
 }

@@ -8,7 +8,6 @@ import "./Rent.css";
 const Rent = () => {
 
     const navigate = useNavigate();
-    const [Inputdrop, setInputdrop] = useState("Select Property type");
     const [clickedrentBhk, setClickedrentBhk] = useState({
         bhk1: false,
         bhk2: false,
@@ -20,29 +19,67 @@ const Rent = () => {
         furni2: false,
         furni3: false,
     });
-    const [Inputrentarea, setInputrentarea] = useState("Sq-ft");
-    const [price, setPrice] = useState(""); // State for input value
-    const [formattedrentPrice, setFormattedrentPrice] = useState("");
-    const [depprice, setdepPrice] = useState("");
-    const [depformattedrentPrice, setdepFormattedrentPrice] = useState("");
-    const [selectedDate, setSelectedDate] = useState(null);
 
+    const [formattedrentPrice, setFormattedrentPrice] = useState("");
+    const [depformattedrentPrice, setdepFormattedrentPrice] = useState("");
+    const [rentData, setrentData] = useState({
+        propertyType: '', city: '', locality: '', societyName: '', bhk: '', furnishedType: '', carpetArea: '', areaUnit: '',
+        monthlyRent: '', willingToRent: '', durationOfAgreement: '', securityDeposit: '', availableFrom: '',
+        features: {
+            bedrooms: '', // Number of bedrooms
+            bathrooms: '', // Number of bathrooms
+            balconies: '', // Number of balconies
+            floorNumber: '', // Floor number
+            totalFloors: '', // Total floors in the building
+            ageOfProperty: '', // Age of the property in years
+        },
+        amenities: []
+    });
+    const [errors, setErrors] = useState({
+        type: '',
+        city: '',
+        location: '',
+        societyName:'',
+        bhk: '',
+        furni: '',
+        carea: '',
+        cunit: '',
+        mprice:'',
+        sprice:'',
+        avail:'',
+    });
 
     const changedrop = (value) => {
-        setInputdrop(value);
+        setrentData((prevState) => ({
+            ...prevState,
+            propertyType: value
+        }));
     }
     const handlerentBhk = (buttonKey) => {
         setClickedrentBhk((prevState) => ({
             [buttonKey]: !prevState[buttonKey], // Toggle the clicked button's style
         }));
+        const bhkValue = buttonKey === 'bhk1' ? '1RK' :
+            buttonKey === 'bhk2' ? '1BHK' :
+                buttonKey === 'bhk3' ? '2BHK' :
+                    '3BHK'; // Default to '3BHK' if 'bhk4' is clicked
+
+        setrentData({ ...rentData, bhk: bhkValue });
     }
     const handlerentfurni = (buttonKey) => {
         setClickedrentfurni((prevState) => ({
             [buttonKey]: !prevState[buttonKey], // Toggle the clicked button's style
         }));
+        const furniValue = buttonKey === 'furni1' ? 'Fully furnished' :
+            buttonKey === 'furni2' ? 'Semi Furnished' : "Unfurnished"
+        setrentData({ ...rentData, furnishedType: furniValue });
     }
-    const changerentarea = (value) => {
-        setInputrentarea(value);
+    const changerentarea = (e, value) => {
+        e.preventDefault();
+        setrentData((prevState) => ({
+            ...prevState,
+            areaUnit: value, // Update formData with the selected unit
+        }));
     }
     const formatrentPrice = (value) => {
         if (!value) return ""; // Handle empty input
@@ -62,16 +99,76 @@ const Rent = () => {
     };
     const handleInputrentChange = (e) => {
         const value = e.target.value.replace(/[^\d]/g, ""); // Allow only numbers
-        setPrice(value);
+        setrentData((prevData) => ({
+            ...prevData,
+            monthlyRent: value, // Store the rent price in rentData
+        }));
         setFormattedrentPrice(formatrentPrice(value));
     };
     const handledepInputrentChange = (e) => {
         const value = e.target.value.replace(/[^\d]/g, ""); // Allow only numbers
-        setdepPrice(value);
+        setrentData((prevData) => ({
+            ...prevData,
+            securityDeposit: value, // Store the security deposit in rentData
+        }));
         setdepFormattedrentPrice(formatrentPrice(value));
     };
-    const handlerentpage =()=>{
-        navigate('/profile/rent-property');
+    const handlerentpage = () => {
+        let formErrors = {};
+        if (!rentData.propertyType) {
+            formErrors.type = 'Select Property Type';
+        }
+        const namepattern = /^[A-Za-z\s]+$/;
+        if (!rentData.city) {
+            formErrors.city = 'City is required';
+        } else if (!namepattern.test(rentData.city)) {
+            formErrors.city = 'Please enter a valid city';
+        }
+        if (!rentData.locality) {
+            formErrors.location = 'Location is required';
+        } else if (!namepattern.test(rentData.locality)) {
+            formErrors.location = 'Please enter a valid Location';
+        }
+        if (!rentData.societyName) {
+            formErrors.societyName = 'Name of Society/Project is required';
+        } else if (!namepattern.test(rentData.society)) {
+            formErrors.societyName = 'Please enter a Name';
+        }
+        if (!rentData.bhk) {
+            formErrors.bhk = 'Select BHK';
+        }
+        if (!rentData.furnishedType) {
+            formErrors.furni = 'Select furnished Type';
+        }
+        const areapattern = /^\d+(\.\d{1,2})?$/;
+        if (!rentData.carpetArea) {
+            formErrors.carea = 'Carpet Area is required';
+        } else if (!areapattern.test(rentData.carpetArea)) {
+            formErrors.carea = 'Please enter a valid numbers';
+        }
+        if (!rentData.areaUnit) {
+            formErrors.cunit = 'Select Carpet Area Unit';
+        }
+        if (!rentData.securityDeposit) {
+            formErrors.sprice = 'Security Deposit is required';
+        }
+        if (!rentData.monthlyRent) {
+            formErrors.mprice = 'Monthly Rent is required';
+        }
+        if (!rentData.availableFrom) {
+            formErrors.avail = 'Available date cannot be empty';
+        } else {
+            const date = rentData.availableFrom;
+            const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(date.toISOString().split('T')[0]);
+            if (!isValidDate) {
+                formErrors.avail = 'Date must be in the format YYYY-MM-DD';
+            }
+        }
+        if (Object.keys(formErrors).length > 0) {
+            setErrors(formErrors);
+            return; // Stop the form submission if there are errors
+        }
+        navigate('/profile/rent-property', { state: rentData });
     }
 
     return (
@@ -84,11 +181,10 @@ const Rent = () => {
                         <div className='mb-2'>Property Type</div>
                         <div class="dropdown d-flex rent-drop">
                             <button class="btn btn-secondary dropdown-toggle bg-white text-dark d-flex justify-content-between align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span>{Inputdrop}</span>
+                                <span>{rentData.propertyType || 'Select Property type'}</span>
                                 <span className="dropdown-arrow"></span>
                             </button>
                             <ul class="dropdown-menu rent-drop-menu">
-                                <li><a class="dropdown-item" onClick={() => changedrop("Select Property type")} href="#">Select Property type</a></li>
                                 <li><a class="dropdown-item" onClick={() => changedrop("Flat")} href="#">Flat</a></li>
                                 <li><a class="dropdown-item" onClick={() => changedrop("Residential House")} href="#">Residential House</a></li>
                                 <li><a class="dropdown-item" onClick={() => changedrop("Villa")} href="#">Villa</a></li>
@@ -101,19 +197,29 @@ const Rent = () => {
                                 <li><a class="dropdown-item" onClick={() => changedrop("Industry")} href="#">Industry</a></li>
                             </ul>
                         </div>
+                        {errors.type && <div className="text-danger error-txt">{errors.type}</div>}
                     </div>
-                    <div className='mt-5'>
+                    <div className={errors.type ? 'mt-4' : 'mt-5'}>
                         <div><h5>Property Location</h5></div>
                         <div>
                             <div>City</div>
-                            <input type="text" className="rent-property-inp p-2 pt-1 w-100" name='pcity' id='city' />
+                            <input type="text" className="rent-property-inp p-2 pt-1 w-100" name='pcity' id='city'
+                                value={rentData.city}
+                                onChange={(e) => setrentData({ ...rentData, city: e.target.value })} />
+                            {errors.city && <div className="text-danger error-txt">{errors.city}</div>}
                             <div className='mt-3'>Locality</div>
-                            <input type="text" className="rent-property-inp p-2 pt-1 w-100" name='locality' id='plocality' />
+                            <input type="text" className="rent-property-inp p-2 pt-1 w-100" name='locality' id='plocality'
+                                value={rentData.locality}
+                                onChange={(e) => setrentData({ ...rentData, locality: e.target.value })} />
+                            {errors.location && <div className="text-danger error-txt">{errors.location}</div>}
                             <div className='mt-3'>Name of Society/Project</div>
-                            <input type="text" className="rent-property-inp p-2 pt-1 w-100" name='namesociety' id='project' />
+                            <input type="text" className="rent-property-inp p-2 pt-1 w-100" name='namesociety' id='project'
+                                value={rentData.societyName}
+                                onChange={(e) => setrentData({ ...rentData, societyName: e.target.value })} />
+                            {errors.societyName && <div className="text-danger error-txt">{errors.societyName}</div>}
                         </div>
                     </div>
-                    <div className='mt-5'>
+                    <div className={errors.societyName ? 'mt-4':'mt-5'}>
                         <div><h5>BHK</h5></div>
                         <div className='d-flex'>
                             <button className='btn btn-light border' onClick={() => handlerentBhk("bhk1")}
@@ -125,8 +231,9 @@ const Rent = () => {
                             <button className='btn btn-light border ms-3' onClick={() => handlerentBhk("bhk4")}
                                 style={clickedrentBhk.bhk4 ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}}>3BHK</button>
                         </div>
+                        {errors.bhk && <div className="text-danger error-txt">{errors.bhk}</div>}
                     </div>
-                    <div className='mt-5'>
+                    <div className={errors.bhk ? 'mt-4':'mt-5'}>
                         <div className='mb-2'><h5>Furnished Type</h5></div>
                         <div className='d-flex'>
                             <button className='btn btn-light border' onClick={() => handlerentfurni("furni1")}
@@ -136,49 +243,57 @@ const Rent = () => {
                             <button className='btn btn-light border ms-3' onClick={() => handlerentfurni("furni3")}
                                 style={clickedrentfurni.furni3 ? { border: "1px solid darkorange", backgroundColor: "#FFE5B4" } : {}} >Unfurnished</button>
                         </div>
+                        {errors.furni && <div className="text-danger error-txt">{errors.furni}</div>}
                     </div>
-                    <div className='mt-5'>
+                    <div className={errors.furni ? 'mt-4':'mt-5'}>
                         <div><h5>Area</h5></div>
                         <div className='mt-2 mb-2'>Carpet Area</div>
                         <div className="input-group mb-3">
-                            <input type="text" className="form-control" aria-label="Text input with dropdown button" />
-                            <button className="btn btn-secondary bg-white text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{Inputrentarea}</button>
+                            <input type="text" className="form-control" aria-label="Text input with dropdown button"
+                                value={rentData.carpetArea}
+                                onChange={(e) => setrentData({ ...rentData, carpetArea: e.target.value })} />
+                            <button className="btn btn-secondary bg-white text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> {rentData.areaUnit || 'Select Area'}</button>
                             <ul className="dropdown-menu dropdown-menu-end">
-                                <li><a className="dropdown-item" onClick={() => changerentarea("Sq-ft")} href="#">Sq-ft</a></li>
-                                <li><a className="dropdown-item" onClick={() => changerentarea("Sq-yrd")} href="#">Sq-yrd</a></li>
-                                <li><a className="dropdown-item" onClick={() => changerentarea("Sq-m")} href="#">Sq-m</a></li>
-                                <li><a className="dropdown-item" onClick={() => changerentarea("Acre")} href="#">Acre</a></li>
-                                <li><a className="dropdown-item" onClick={() => changerentarea("Bigha")} href="#">Bigha</a></li>
+                                <li><a className="dropdown-item" onClick={(e) => changerentarea(e, "Sq-ft")} href="#">Sq-ft</a></li>
+                                <li><a className="dropdown-item" onClick={(e) => changerentarea(e, "Sq-yrd")} href="#">Sq-yrd</a></li>
+                                <li><a className="dropdown-item" onClick={(e) => changerentarea(e, "Sq-m")} href="#">Sq-m</a></li>
+                                <li><a className="dropdown-item" onClick={(e) => changerentarea(e, "Acre")} href="#">Acre</a></li>
+                                <li><a className="dropdown-item" onClick={(e) => changerentarea(e, "Bigha")} href="#">Bigha</a></li>
                             </ul>
                         </div>
+                        {errors.carea && <div className="text-danger error-txt">{errors.carea}</div>}
+                        {errors.cunit && <div className="text-danger error-txt">{errors.cunit}</div>}
                     </div>
-                    <div className="mt-5">
+                    <div className={errors.carea || errors.cunit ? 'mt-4':'mt-5'}>
                         <div><h5>Price Details</h5></div>
                         <div>
                             <div>Monthly Rent</div>
                             <div className='d-flex'>
-                                <FaRupeeSign className='rupee-icon' /><input type="text" className='property-inp p-2 w-100' name='price' value={price}
+                                <FaRupeeSign className='rupee-icon' /><input type="text" className='property-inp p-2 w-100' name='price' value={rentData.monthlyRent}
                                     onChange={handleInputrentChange} id='price' />
                             </div>
                             <span className='fw-bold ms-3 price-format'>{formattedrentPrice}</span>
+                            {errors.mprice && <div className="text-danger error-txt">{errors.mprice}</div>}
                             <div className='mt-3'>Security Deposit</div>
                             <div className='d-flex'>
-                                <FaRupeeSign className='rupee-icon' /><input type="text" className='property-inp p-2 w-100' name='price' value={depprice}
+                                <FaRupeeSign className='rupee-icon' /><input type="text" className='property-inp p-2 w-100' name='price' value={rentData.securityDeposit}
                                     onChange={handledepInputrentChange} id='price' />
                             </div>
                             <span className='fw-bold ms-3 price-format'>{depformattedrentPrice}</span>
+                            {errors.sprice && <div className="text-danger error-txt">{errors.sprice}</div>}
                         </div>
                     </div>
                     <div className='rent-date-cont mt-3'>
                         <div><h5>Available From</h5></div>
                         <DatePicker
                             id="date"
-                            selected={selectedDate}
-                            onChange={(date) => setSelectedDate(date)} // Update state with the selected date
+                            selected={rentData.availableFrom}
+                            onChange={(date) => setrentData({ ...rentData, availableFrom: date })} // Update state with the selected date
                             dateFormat="yyyy-MM-dd" // Format shown in the input
                             placeholderText="YYYY - MM - DD" // Placeholder text for the input field
                             className="form-control rent-date" // Bootstrap input styling
                         />
+                        {errors.avail && <div className="text-danger error-txt">{errors.avail}</div>}
                     </div>
                     <button className='sell-btn p-2 w-100 text-white fw-bold mt-4' onClick={handlerentpage}>Post Property</button>
                 </div>

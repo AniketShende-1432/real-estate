@@ -7,6 +7,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import Propcard from "./Propcard";
+import Rentcard from './Rentcard';
 
 const Search = () => {
     const [Input, setInput] = useState("Buy");
@@ -32,6 +33,7 @@ const Search = () => {
         bed4: false,
     });
     const [avalue, setavalue] = useState(0);
+    const [rentproperty, setRentProperty] = useState([]);
 
     useEffect(() => {
         const fetchProperties = async () => {
@@ -40,6 +42,9 @@ const Search = () => {
                 await axios.get(`${base_url}/api/v3/properties`).then((response) => {
                     setProperties(response.data); // Directly set the response data
                 })
+                await axios.get(`${base_url}/api/v3/rentproperties`).then((response) => {
+                    setRentProperty(response.data); // Directly set the response data
+                })
             } catch (error) {
                 console.error('Error fetching properties:', error);
             }
@@ -47,7 +52,7 @@ const Search = () => {
 
         fetchProperties();
     }, []);
-
+    console.log(rentproperty);
     const change = (value) => {
         setInput(value);
     }
@@ -80,7 +85,7 @@ const Search = () => {
         <>
             <nav className="navbar navbar-expand-lg border search-nav">
                 <div className="container-fluid justify-content-evenly search-cont">
-                    <a className="navbar-brand text-white s-logo fs-3" href="#">Housing</a>
+                    <a className="navbar-brand text-white s-logo fs-3" href="#">ShelterBIG</a>
                     <div class="dropdown d-flex w-50">
                         <button class="btn btn-secondary dropdown-toggle bg-white text-dark search-drop" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {Input}
@@ -244,6 +249,9 @@ const Search = () => {
                     </div></Link>
                     {properties.map((property) => (
                         <Propcard key={property._id} property={property} /> // Render a card for each property
+                    ))}
+                    {rentproperty.map((property) => (
+                        <Rentcard key={property._id} property={property} /> // Render a card for each property
                     ))}
                 </div>
             </div>

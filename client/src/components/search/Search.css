@@ -1,12 +1,17 @@
 .search-nav{
     background-color: darkorange;
+    position: sticky;
+    top:0;
 }
 .search-cont{
     color:white;
     z-index: 100;
 }
 .s-logo{
-    font-weight: bold;
+    color:rgb(241, 241, 104) !important;
+    font-weight:bold;
+    font-size: 2rem !important;
+    text-shadow: 3px 4px 2px rgba(0, 0, 0, 0.5);
 }
 .search-input{
     border-top-left-radius: 0px;
@@ -39,7 +44,7 @@
     border-radius: 5px;
     width:23%;
     position:sticky;
-    top:0;
+    top:75px;
 }
 .filter-h3{
     color:darkorange;
@@ -129,4 +134,9 @@
 .cardsec{
     border: 1px solid gray;
     border-radius: 14px;
+}
+.dep-price{
+    font-size: medium;
+    color:gray;
+    font-family: 'Times New Roman', Times, serif;
 }

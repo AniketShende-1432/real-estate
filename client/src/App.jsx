@@ -18,6 +18,7 @@ import PG from "./components/profile/pg/PG";
 import PG2 from './components/profile/pg/PG2';
 import Commercial from './components/profile/commercial/Commercial';
 import Commercial2 from './components/profile/commercial/Commercial2';
+import Rentpro from './components/product/Rentpro';
 import { useDispatch } from 'react-redux';
 import { authActions } from './store';
 
@@ -52,6 +53,7 @@ function App() {
         <Route path="/profile/pg-property" element={<PG2 />} />
         <Route path="/profile/commercial" element={<Commercial />} />
         <Route path="/profile/commercial-property" element={<Commercial2 />} />
+        <Route path="/rent-product" element={<Rentpro />} />
         </Routes>
       </Router>
     </>

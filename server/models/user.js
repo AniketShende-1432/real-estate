@@ -28,6 +28,9 @@ const userSchema = new mongoose.Schema({
     sell: [
         { type: mongoose.Types.ObjectId, ref: 'Sell' },
     ],
+    rent: [
+        { type: mongoose.Types.ObjectId, ref: 'Rent' },
+    ],
 },{ timestamps: true });
 
 module.exports = mongoose.model("User",userSchema);
